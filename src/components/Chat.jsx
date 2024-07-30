@@ -1,14 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useUsername } from './UsernameFetch'; // Import the custom hook
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css'; // Optional: Add custom styles if needed
 
 const Chat = () => {
     const { chatLogId } = useParams(); // Extract chatLogId from URL parameters
     const [message, setMessage] = useState('');
-    const [chatLog, setChatLog] = useState([]);
+    const [chatLog, setChatLog] = useState({});
     const [error, setError] = useState(null);
+    const [csrfToken, setCsrfToken] = useState('');
+
+    // Fetch username using the custom hook
+    const username = useUsername();
+
+    // Fetch CSRF token
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/auth/csrf/', { withCredentials: true })
+            .then(response => {
+                setCsrfToken(response.data.csrfToken);
+            })
+            .catch(error => {
+                console.error('Error fetching CSRF token:', error);
+            });
+    }, []);
+
+    // Get CSRF token from cookies
+    const getCookie = (name) => {
+        const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return cookieValue ? cookieValue.pop() : '';
+    };
 
     useEffect(() => {
         if (!chatLogId) {
@@ -19,8 +41,7 @@ const Chat = () => {
         // Fetch existing chat logs
         axios.get(`http://localhost:8000/api/chatlogs/${chatLogId}/`, { withCredentials: true })
             .then(response => {
-                console.log('API response data:', response.data); // Debugging line
-                setChatLog(response.data.message_data || []);
+                setChatLog(response.data.message_data || {});
             })
             .catch(error => {
                 console.error('Error fetching chat logs:', error);
@@ -30,16 +51,30 @@ const Chat = () => {
 
     const sendMessage = (e) => {
         e.preventDefault();
-    
-        axios.post(`http://localhost:8000/api/chatlogs/${chatLogId}/`, {
-            content: message
-        }, { withCredentials: true })
+
+        const newMessage = {
+            timestamp: new Date().toISOString(),
+            sender: 'user',
+            contents: message
+        };
+
+        // Update chat log with the new message
+        const updatedChatLog = { ...chatLog, [Date.now()]: newMessage };
+
+        axios.put(`http://localhost:8000/api/chatlogs/${chatLogId}/`, {
+            message_data: updatedChatLog
+        }, {
+            withCredentials: true,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
         .then(response => {
-            setChatLog(response.data.message_data || []);
+            setChatLog(response.data.message_data || {});
             setMessage('');
         })
         .catch(error => {
-            console.error('Error sending message:', error);
+            console.error('Error sending message:', error.response);
             setError('Error sending message. Please try again later.');
         });
     };
@@ -49,9 +84,10 @@ const Chat = () => {
             <div className="chat-container border rounded p-3">
                 {error && <div className="alert alert-danger">{error}</div>}
                 <div className="chat-log mb-3">
-                    {Array.isArray(chatLog) && chatLog.map((log, index) => (
+                    {Object.values(chatLog).map((log, index) => (
                         <div key={index} className={`chat-message p-2 mb-2 rounded ${log.sender}`}>
-                            <p>{log.content}</p>
+                            <p><strong>{log.sender === 'user' ? username : 'AI'}:</strong></p>
+                            <p>{log.contents}</p>
                         </div>
                     ))}
                 </div>
