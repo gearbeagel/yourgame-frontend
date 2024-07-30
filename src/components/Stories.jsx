@@ -15,7 +15,7 @@ function Story() {
     }, []);
 
     return (
-        <div>
+        <section className='my-5'>
             <h2>List of Stories</h2>
             <ul>
                 {stories.map(story => (
@@ -24,7 +24,7 @@ function Story() {
                     </li>
                 ))}
             </ul>
-        </div>
+        </section>
     );
 }
 
