@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useUsername } from './UsernameFetch'; // Import the custom hook
+import { useUsername } from './UsernameFetch'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Chat.css'; // Optional: Add custom styles if needed
+import './Chat.css'; 
 
 const Chat = () => {
-    const { chatLogId } = useParams(); // Extract chatLogId from URL parameters
+    const { chatLogId } = useParams(); 
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState({});
     const [error, setError] = useState(null);
     const [csrfToken, setCsrfToken] = useState('');
 
-    // Fetch username using the custom hook
     const username = useUsername();
 
-    // Fetch CSRF token
     useEffect(() => {
         axios.get('http://localhost:8000/api/auth/csrf/', { withCredentials: true })
             .then(response => {
@@ -26,7 +24,6 @@ const Chat = () => {
             });
     }, []);
 
-    // Get CSRF token from cookies
     const getCookie = (name) => {
         const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
         return cookieValue ? cookieValue.pop() : '';
@@ -38,7 +35,6 @@ const Chat = () => {
             return;
         }
 
-        // Fetch existing chat logs
         axios.get(`http://localhost:8000/api/chatlogs/${chatLogId}/`, { withCredentials: true })
             .then(response => {
                 setChatLog(response.data.message_data || {});
@@ -58,7 +54,6 @@ const Chat = () => {
             contents: message
         };
 
-        // Update chat log with the new message
         const updatedChatLog = { ...chatLog, [Date.now()]: newMessage };
 
         axios.put(`http://localhost:8000/api/chatlogs/${chatLogId}/`, {
