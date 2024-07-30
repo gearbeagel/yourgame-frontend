@@ -16,7 +16,7 @@ const ThemeSwitcher = () => {
   };
 
   return (
-    <button className="btn btn-outline-secondary ms-2" onClick={toggleTheme}>
+    <button className="btn btn-outline-secondary ms-2 nav-link p-2" onClick={toggleTheme}>
       {theme === 'light' ? (
         <i className="bi bi-moon-stars-fill"></i>
       ) : (

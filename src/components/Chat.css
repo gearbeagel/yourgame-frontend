@@ -1,0 +1,16 @@
+/* Custom styles to differentiate between user and AI messages */
+.chat-message.user {
+    background-color: #e1f5fe; /* Light blue for user messages */
+    text-align: right;
+}
+
+.chat-message.ai {
+    background-color: #f1f8e9; /* Light green for AI messages */
+    text-align: left;
+}
+
+/* Optional: Adjustments to make chat container responsive and look better */
+.chat-container {
+    max-height: 500px; /* Adjust height as needed */
+    overflow-y: auto;
+}

@@ -1,24 +1,64 @@
-/* src/components/ThemeSwitcher.css */
+/* Set default text color on the body */
 body.light {
   background-color: #f8f9fa;
-  color: #343a40;
+  color: #787f86; /* Default text color */
 }
 
 body.dark {
-  background-color: #343a40;
-  color: #f8f9fa;
+  background-color: #787f86;
+  color: #f8f9fa; /* Default text color */
 }
 
-.navbar {
-  background-color: lightgray;
+/* Specific rules for the navbar */
+body.light .navbar {
+  background-color: #c6ccd3;
+  color: #4a4e52; /* Default navbar text color */
 }
+
+body.dark .navbar {
+  background-color: #4a4e52;
+  color: #f8f9fa; /* Default navbar text color */
+}
+
+/* Ensure child elements inherit color */
+body.light .navbar .nav-link {
+  color: inherit;
+}
+
+body.dark .navbar .nav-link {
+  color: inherit;
+}
+
 
 .theme-switcher {
   text-align: center;
   margin-top: 20px;
 }
 
+
 .btn {
   padding: 10px 20px;
   font-size: 16px;
+}
+
+
+body.light .theme-switcher .btn {
+  background-color: #f8f9fa;
+  color: #787f86;
+  border: 1px solid #787f86;
+}
+
+
+body.light .theme-switcher .btn:hover {
+  background-color: #e2e6ea;
+}
+
+body.dark .theme-switcher .btn {
+  background-color: #4a4e52;
+  color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+}
+
+body.dark .theme-switcher .btn:hover {
+  background-color: #6c757d;
 }
