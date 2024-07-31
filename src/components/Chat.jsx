@@ -1,22 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useUsername } from './UsernameFetch'; 
+import { useUsername } from './UsernameFetch'; // Import the custom hook
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Chat.css'; 
+import './Chat.css'; // Optional: Add custom styles if needed
+import StoryForm from './StoryForm'; // Import the StoryForm component
 
 const Chat = () => {
-    const { chatLogId } = useParams(); 
+    const { chatLogId } = useParams(); // Extract chatLogId from URL parameters
     const [message, setMessage] = useState('');
     const [chatLog, setChatLog] = useState({});
     const [error, setError] = useState(null);
     const [csrfToken, setCsrfToken] = useState('');
+    const chatLogEndRef = useRef(null);
 
+    // Fetch username using the custom hook
     const username = useUsername();
 
+    // Fetch CSRF token
     useEffect(() => {
         axios.get('http://localhost:8000/api/auth/csrf/', { withCredentials: true })
             .then(response => {
+                console.log('CSRF token fetched successfully');
                 setCsrfToken(response.data.csrfToken);
             })
             .catch(error => {
@@ -24,6 +29,7 @@ const Chat = () => {
             });
     }, []);
 
+    // Get CSRF token from cookies
     const getCookie = (name) => {
         const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
         return cookieValue ? cookieValue.pop() : '';
@@ -35,6 +41,7 @@ const Chat = () => {
             return;
         }
 
+        // Fetch existing chat logs
         axios.get(`http://localhost:8000/api/chatlogs/${chatLogId}/`, { withCredentials: true })
             .then(response => {
                 setChatLog(response.data.message_data || {});
@@ -45,6 +52,13 @@ const Chat = () => {
             });
     }, [chatLogId]);
 
+    useEffect(() => {
+        // Scroll to the bottom of the chat log when new messages are added
+        if (chatLogEndRef.current) {
+            chatLogEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [chatLog]);
+
     const sendMessage = (e) => {
         e.preventDefault();
 
@@ -54,6 +68,7 @@ const Chat = () => {
             contents: message
         };
 
+        // Update chat log with the new message
         const updatedChatLog = { ...chatLog, [Date.now()]: newMessage };
 
         axios.put(`http://localhost:8000/api/chatlogs/${chatLogId}/`, {
@@ -65,6 +80,7 @@ const Chat = () => {
             }
         })
         .then(response => {
+            console.log('Updated chat log:', response.data);
             setChatLog(response.data.message_data || {});
             setMessage('');
         })
@@ -74,17 +90,28 @@ const Chat = () => {
         });
     };
 
+    const handleStoryCreated = (storyId, initialPrompt) => {
+        setChatLog({
+            ...chatLog,
+            [Date.now()]: {
+                sender: 'ai',
+                contents: initialPrompt
+            }
+        });
+    };
+
     return (
         <div className="container mt-4">
             <div className="chat-container border rounded p-3">
                 {error && <div className="alert alert-danger">{error}</div>}
-                <div className="chat-log mb-3">
+                <div className="chat-log mb-3 overflow-auto">
                     {Object.values(chatLog).map((log, index) => (
                         <div key={index} className={`chat-message p-2 mb-2 rounded ${log.sender}`}>
                             <p><strong>{log.sender === 'user' ? username : 'AI'}:</strong></p>
                             <p>{log.contents}</p>
                         </div>
                     ))}
+                    <div ref={chatLogEndRef} />
                 </div>
                 <form onSubmit={sendMessage} className="input-group">
                     <input

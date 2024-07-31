@@ -1,6 +1,5 @@
 // src/components/ThemeSwitcher.js
 import { useState, useEffect } from "react";
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import './ThemeSwitcher.css';
 
 const ThemeSwitcher = () => {

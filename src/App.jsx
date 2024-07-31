@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import axios from 'axios';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import Navbar from './components/Navbar';
 import Homepage from './components/Homepage';
 import Story from './components/Stories';
 import Login from './components/Login';
 import Register from './components/Register';
 import Chat from './components/Chat';
+import StoryForm from './components/StoryForm';
+import "./App.css"
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,6 +39,7 @@ const App = () => {
                         <Route path="/login" element={<Login onLoginSuccess={() => setIsAuthenticated(true)} />} />
                         <Route path="/register" element={<Register onRegisterSuccess={() => setIsAuthenticated(true)} />} />
                         <Route path="/chatlogs/:chatLogId" element={<Chat />} />
+                        <Route path="/create" element={<StoryForm />} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </div>

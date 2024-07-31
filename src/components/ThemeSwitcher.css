@@ -29,25 +29,22 @@ body.dark .navbar .nav-link {
   color: inherit;
 }
 
-
+/* Theme switcher styling */
 .theme-switcher {
   text-align: center;
   margin-top: 20px;
 }
-
 
 .btn {
   padding: 10px 20px;
   font-size: 16px;
 }
 
-
 body.light .theme-switcher .btn {
   background-color: #f8f9fa;
   color: #787f86;
   border: 1px solid #787f86;
 }
-
 
 body.light .theme-switcher .btn:hover {
   background-color: #e2e6ea;
@@ -61,4 +58,54 @@ body.dark .theme-switcher .btn {
 
 body.dark .theme-switcher .btn:hover {
   background-color: #6c757d;
+}
+
+/* Styles for story cards */
+.card {
+  border: 1px solid #dfe2e5; /* Default border color */
+  border-radius: 25px;
+}
+
+body.dark .card {
+  border-color: #6c757d; /* Dark mode border color */
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.card-text {
+  margin-bottom: 0.75rem;
+}
+
+.card-subtitle {
+  margin-bottom: 0.5rem;
+}
+
+body.light .card-body {
+  background-color: #ffffff;
+  color: #4a4e52; 
+}
+
+body.dark .card-body {
+  background-color: #4a4e52;
+  color: #e9ecef;
+}
+
+body.light .card-footer {
+  background-color: #f1f3f5;
+}
+
+body.dark .card-footer {
+  background-color: #495057;
+}
+
+.navbar-brand i {
+  font-size: 1.5rem; /* Adjust icon size as needed */
+  vertical-align: middle; /* Align icon vertically */
 }
