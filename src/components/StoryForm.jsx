@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import "./ThemeSwitcher.css"
 
 const StoryForm = () => {
     const [title, setTitle] = useState('');
@@ -54,48 +55,62 @@ const StoryForm = () => {
     };
 
     return (
-        <div>
+        <div className="container mt-5">
             {message && <div className="alert alert-info">{message}</div>}
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Title</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
+            <div className="card shadow-sm card-form">
+                <div className="card-header">
+                    <h4 className="mb-0">Create a New Story</h4>
                 </div>
-                <div className="form-group">
-                    <label>Plot</label>
-                    <textarea
-                        className="form-control"
-                        value={plot}
-                        onChange={(e) => setPlot(e.target.value)}
-                        required
-                    ></textarea>
+                <div className="card-body">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group mb-3">
+                            <label htmlFor="title" className="form-label">What is the title of your story?</label>
+                            <input
+                                id="title"
+                                type="text"
+                                className="form-control"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="plot" className="form-label">What would you like your story to be about?</label>
+                            <textarea
+                                id="plot"
+                                className="form-control"
+                                rows="4"
+                                value={plot}
+                                onChange={(e) => setPlot(e.target.value)}
+                                required
+                            ></textarea>
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="characters" className="form-label">Who are the characters in your story?</label>
+                            <textarea
+                                id="characters"
+                                className="form-control"
+                                rows="4"
+                                value={characters}
+                                onChange={(e) => setCharacters(e.target.value)}
+                                required
+                            ></textarea>
+                        </div>
+                        <div className="form-group mb-3">
+                            <label htmlFor="setting" className="form-label">What is the setting of your story?</label>
+                            <textarea
+                                id="setting"
+                                className="form-control"
+                                rows="4"
+                                value={setting}
+                                onChange={(e) => setSetting(e.target.value)}
+                                required
+                            ></textarea>
+                        </div>
+                        <button type="submit" className="btn btn-sw mt-3 w-100">Create Story</button>
+                    </form>
                 </div>
-                <div className="form-group">
-                    <label>Characters</label>
-                    <textarea
-                        className="form-control"
-                        value={characters}
-                        onChange={(e) => setCharacters(e.target.value)}
-                        required
-                    ></textarea>
-                </div>
-                <div className="form-group">
-                    <label>Setting</label>
-                    <textarea
-                        className="form-control"
-                        value={setting}
-                        onChange={(e) => setSetting(e.target.value)}
-                        required
-                    ></textarea>
-                </div>
-                <button type="submit" className="btn btn-primary mt-3">Create Story</button>
-            </form>
+            </div>
         </div>
     );
 };

@@ -9,7 +9,7 @@ const Navbar = ({ isAuthenticated, handleLogout }) => {
     <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
       <Link className="navbar-brand nav-link" to="/">
-          <i className="bi bi-joystick"></i>
+          <i className="bi bi-joystick"></i> UR GAME!
         </Link>
         
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

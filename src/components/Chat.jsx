@@ -3,8 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useUsername } from './UsernameFetch'; // Import the custom hook
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Chat.css'; // Optional: Add custom styles if needed
-import StoryForm from './StoryForm'; // Import the StoryForm component
+import './Chat.css'; // Import custom styles
 
 const Chat = () => {
     const { chatLogId } = useParams(); // Extract chatLogId from URL parameters
@@ -21,7 +20,6 @@ const Chat = () => {
     useEffect(() => {
         axios.get('http://localhost:8000/api/auth/csrf/', { withCredentials: true })
             .then(response => {
-                console.log('CSRF token fetched successfully');
                 setCsrfToken(response.data.csrfToken);
             })
             .catch(error => {
@@ -80,7 +78,6 @@ const Chat = () => {
             }
         })
         .then(response => {
-            console.log('Updated chat log:', response.data);
             setChatLog(response.data.message_data || {});
             setMessage('');
         })
@@ -102,27 +99,32 @@ const Chat = () => {
 
     return (
         <div className="container mt-4">
-            <div className="chat-container border rounded p-3">
-                {error && <div className="alert alert-danger">{error}</div>}
-                <div className="chat-log mb-3 overflow-auto">
-                    {Object.values(chatLog).map((log, index) => (
-                        <div key={index} className={`chat-message p-2 mb-2 rounded ${log.sender}`}>
-                            <p><strong>{log.sender === 'user' ? username : 'AI'}:</strong></p>
-                            <p>{log.contents}</p>
-                        </div>
-                    ))}
-                    <div ref={chatLogEndRef} />
+            <div className="card">
+                <div className="card-header ">
+                    <h5 className="mb-0">Chat</h5>
                 </div>
-                <form onSubmit={sendMessage} className="input-group">
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        required
-                    />
-                    <button type="submit" className="btn btn-primary ms-2">Send</button>
-                </form>
+                <div className="card-body d-flex flex-column h-100">
+                    {error && <div className="alert alert-danger">{error}</div>}
+                    <div className="chat-log flex-grow-1 mb-3">
+                        {Object.values(chatLog).map((log, index) => (
+                            <div key={index} className={`chat-message p-3 mb-2 rounded ${log.sender === 'user' ? 'bg-primary text-white align-self-end' : 'bg-secondary text-white align-self-start'}`}>
+                                <p className="mb-1"><strong>{log.sender === 'user' ? username : 'AI'}:</strong></p>
+                                <p className="mb-0">{log.contents}</p>
+                            </div>
+                        ))}
+                        <div ref={chatLogEndRef} />
+                    </div>
+                    <form onSubmit={sendMessage} className="input-group">
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            required
+                        />
+                        <button type="submit" className="btn btn-success">Send</button>
+                    </form>
+                </div>
             </div>
         </div>
     );

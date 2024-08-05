@@ -1,48 +1,24 @@
-/* Custom styles to differentiate between user and AI messages */
-.chat-message.user {
-    background-color: #e1f5fe; /* Light blue for user messages */
-    color: black;
-    text-align: right;
-}
-
-.chat-message.ai {
-    background-color: #f1f8e9; /* Light green for AI messages */
-    color: black;
-    text-align: left;
-}
-
-/* Container setup */
-.chat-container {
+/* Flexbox for proper layout and scrolling */
+.chat-log {
     display: flex;
     flex-direction: column;
-    max-height: 80vh; /* Set a maximum height for the chat container */
-    height: 80vh; /* Ensure it does not take the full viewport height */
-    border: 1px solid #ddd; /* Optional: Add a border for visual separation */
-    border-radius: 5px; /* Optional: Rounded corners */
-}
-
-/* Scrollable chat log */
-.chat-log {
-    flex-grow: 1;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column; /* Stack messages from the bottom */
+    height: 70vh;
     justify-content: flex-end;
-    padding: 10px;
 }
 
-/* Message styling */
-.chat-message {
-    background-color: #f8f9fa; /* Light background for messages */
-    padding: 10px;
-    border-radius: 5px;
+.chat-log .chat-message {
     margin-bottom: 10px;
+    margin-right: 10px;
+    max-width: 700px;
+    width: auto;
 }
 
-/* Input group setup */
-.input-group {
-    padding: 10px;
-    background: white;
-    border-top: 1px solid #ddd; /* Optional: Border for separation */
-    z-index: 10;
+/* Style individual messages based on sender */
+.bg-primary {
+    background-color: #007bff !important; /* Bootstrap primary color */
+}
+
+.bg-light {
+    background-color: #f8f9fa !important; /* Bootstrap light color */
 }

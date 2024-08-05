@@ -106,6 +106,26 @@ body.dark .card-footer {
 }
 
 .navbar-brand i {
-  font-size: 1.5rem; /* Adjust icon size as needed */
-  vertical-align: middle; /* Align icon vertically */
+  font-size: 1.5rem;
 }
+
+body.light .btn-sw {
+  background-color: #495057;
+  color: #e9ecef;
+}
+
+body.dark .btn-sw {
+  background-color: #f1f3f5;
+  color: #4a4e52; 
+}
+
+body.light .card-header {
+  background-color: #495057;
+  color: #e9ecef;
+}
+
+body.dark .card-header {
+  background-color: #f1f3f5;
+  color: #4a4e52; 
+}
+

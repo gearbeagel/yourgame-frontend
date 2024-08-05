@@ -40,10 +40,10 @@ function Story() {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:8000/api/stories/${id}/`, {
-                withCredentials: true,
+                withCredentials: true, // Send cookies (including CSRF token)
                 headers: {
-                    'X-CSRFToken': csrfToken, // Use CSRF token in the headers
-                },
+                        'X-CSRFToken': getCookie('csrftoken') // Function to retrieve CSRF token from cookie
+                    }
             });
             setStories(stories.filter(story => story.id !== id));
         } catch (err) {
@@ -51,48 +51,61 @@ function Story() {
         }
     };
 
+    const getCookie = (name) => {
+        const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return cookieValue ? cookieValue.pop() : '';
+    };
+
+    const btnClass = localStorage.getItem('theme') === 'light' ? 'btn-light' : 'btn-dark';
+    // localst.getitem.
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
     return (
         <section className='my-5'>
             <h2 className='text-center'>List of Stories</h2>
-            <div className='row mt-5'>
-                {stories.map(story => (
-                    <div className='col-md-3 mb-4 my-3' key={story.id}>
-                        <div className='card'>
-                            <div className='card-body'>
-                                <div className='d-flex justify-content-between'>
-                                    <h5 className='card-title'>{story.title}</h5>
-                                    <button
-                                        className='btn btn-light btn-sm'
-                                        onClick={() => handleDelete(story.id)}
-                                    >
-                                        <i className="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                                <p className='card-text'>{story.description}</p>
-                                {story.chat_logs && story.chat_logs.length > 0 && (
-                                    <div>
-                                        <p className='card-subtitle mb-2'>
-                                            <i className="bi bi-clock"></i> {story.chat_logs[0].timestamp ? formatDistanceToNow(parseISO(story.chat_logs[0].timestamp), { addSuffix: true }) : 'Unknown'}
-                                        </p>
+            {stories && stories.length > 0 ? (
+                <div className='row mt-5'>
+                    {stories.map(story => (
+                        <div className='col-md-3 mb-4' key={story.id}>
+                            <div className='card'>
+                                <div className='card-body'>
+                                    <div className='d-flex justify-content-between'>
+                                        <h5 className='card-title'>{story.title}</h5>
+                                        <button
+                                            className='btn btn-danger btn-sm'
+                                            onClick={() => handleDelete(story.id)}
+                                        >
+                                            <i className="bi bi-trash"></i>
+                                        </button>
                                     </div>
-                                )}
-                            </div>
-                            <div className='card-footer'>
-                                <Link to={`/chatlogs/${story.chat_logs[0].id}`} className={`btn ${document.body.className === 'light' ? 'btn-light' : 'btn-dark'}`}>
-                                    <p className='mb-0'>
-                                        <i className="bi bi-chat"></i> View Chatlog
-                                    </p>
-                                </Link>
+                                    <p className='card-text'>{story.description}</p>
+                                    {story.chat_logs && story.chat_logs.length > 0 && (
+                                        <div>
+                                            <p className='card-subtitle mb-2'>
+                                                <i className="bi bi-clock"></i> {story.chat_logs[0].timestamp ? formatDistanceToNow(parseISO(story.chat_logs[0].timestamp), { addSuffix: true }) : 'Unknown'}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className='card-footer'>
+                                    <Link to={`/chatlogs/${story.chat_logs[0].id}`} className={`btn btn-sw`}>
+                                        <p className='mb-0'>
+                                            <i className="bi bi-chat"></i> View Chatlog
+                                        </p>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            ) : (
+                <p className='text-center'>No stories available.</p>
+            )}
         </section>
     );
-}
+};
+
 
 export default Story;
